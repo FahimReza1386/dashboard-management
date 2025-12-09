@@ -11,6 +11,9 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
 from pathlib import Path
+from django.templatetags.static import static
+from django.urls import reverse_lazy
+from django.utils.translation import gettext_lazy as _
 import os
 
 # Third-Party Imports
@@ -36,9 +39,9 @@ ALLOWED_HOSTS = config("ALLOWED_HOSTS", default="*", cast=lambda v: [s.strip() f
 
 INSTALLED_APPS = [
     # Unfold / ModelTranslation Apps
-    'modeltranslation',
+    "modeltranslation",
     
-    'unfold',
+    "unfold",
     "unfold.contrib.filters",
     "unfold.contrib.forms",
     "unfold.contrib.inlines",
@@ -47,14 +50,19 @@ INSTALLED_APPS = [
     "unfold.contrib.simple_history",
     "unfold.contrib.location_field",    
     # Django Apps
-    'django.contrib.admin',
-    'django.contrib.auth',
-    'django.contrib.contenttypes',
-    'django.contrib.sessions',
-    'django.contrib.messages',
-    'django.contrib.staticfiles',
+    "django.contrib.admin",
+    "django.contrib.auth",
+    "django.contrib.contenttypes",
+    "django.contrib.sessions",
+    "django.contrib.messages",
+    "django.contrib.staticfiles",
+    
+    # Local Apps
+    "utils",
+    "accounts",
     
     # Third-Party Apps
+    "phonenumber_field",
 ]
 
 MIDDLEWARE = [
@@ -171,3 +179,78 @@ CELERY_ACCEPT_CONTENT = ['json']
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
 CELERY_TIMEZONE = 'Asia/Tehran'
+
+
+
+# Authentication Configurations
+AUTH_USER_MODEL = "accounts.Users"
+
+# PhoneNumber Field Configurations
+PHONENUMBER_DEFAULT_REGION = 'IR'
+PHONENUMBER_DB_FORMAT = 'NATIONAL'
+
+
+# Unfold Configurations
+
+UNFOLD = {
+    "SITE_TITLE": _("Dashboard Management"),
+    "SITE_HEADER": _("FahimWeb"),
+    "SITE_SUBHEADER": _("Hello Admin..."),
+    "SITE_DROPDOWN": [
+        {
+            "icon": "diamond",
+            "title": _("Go To api docs"),
+            "link": "/",
+        },
+    ],
+    "SITE_URL": "/",
+    "SITE_ICON": {
+        "light": lambda request: static("assets/images/favicon.ico"),  # light mode
+        "dark":  lambda request: static("assets/images/favicon.ico"),  # dark mode
+    },
+    # "SITE_LOGO": lambda request: static("logo.svg"),  # both modes, optimise for 32px height
+    # "SITE_LOGO": {
+    #     "light": lambda request: static("assets/images/favicon.ico"),  # light mode
+    #     "dark":  lambda request: static("assets/images/favicon.ico"),  # dark mode
+    # },
+    "SITE_SYMBOL": "speed",  # symbol from icon set
+    "SITE_FAVICONS": [
+        {
+            "rel": "icon",
+            "sizes": "32x32",
+            "type": "image/svg+xml",
+            "href":  lambda request: static("assets/images/favicon.ico"),
+        },
+    ],
+    "SHOW_HISTORY": True, # show/hide "History" button, default: True
+    "SHOW_VIEW_ON_SITE": True, # show/hide "View on site" button, default: True
+    "SHOW_BACK_BUTTON": False, # show/hide "Back" button on changeform in header, default: False
+    "THEME": "dark", # Force theme: "dark" or "light". Will disable theme switcher
+    "BORDER_RADIUS": "6px",
+    "SIDEBAR": {
+        "show_search": False,  # Search in applications and models names
+        "command_search": False,  # Replace the sidebar search with the command search
+        "show_all_applications": False,  # Dropdown with all applications and models
+        "navigation": [
+            {
+                "title": _("Operation management"),
+                "separator": False, 
+                "collapsible": True,
+                "items": [
+                    {
+                        "title": _("Groups"),
+                        "icon": "group",  # Supported icon set: https://fonts.google.com/icons
+                        "link": reverse_lazy("admin:auth_group_changelist"),
+                        "permission": lambda request: request.user.is_superuser,
+                    },
+                    {
+                        "title": _("Users"),
+                        "icon": "people",
+                        "link": reverse_lazy("admin:accounts_users_changelist"),
+                    },
+                ],
+            },
+        ],
+    },
+    "SHOW_LANGUAGES": True,
+}
