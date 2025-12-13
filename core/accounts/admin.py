@@ -15,10 +15,11 @@ class UsersAdmin(ModelAdmin):
         'first_name',
         'last_name',
         'is_active',
+        'is_verified',
         'is_staff',
     )
     search_fields = ('email', 'first_name', 'last_name', 'national_code', 'phone_number')
-    list_filter = ('is_active', 'is_staff')
+    list_filter = ('is_active', 'is_staff', 'is_verified')
     ordering = ('-id',)
     
     fieldsets = (
@@ -29,9 +30,6 @@ class UsersAdmin(ModelAdmin):
             'fields': ('first_name', 'last_name', 'national_code', 'phone_number', 'avatar')
         }),
         ('Permissions', {
-            'fields': ('is_active', 'is_staff', 'is_superuser', 'groups', 'user_permissions')
+            'fields': ('is_active', 'is_staff', 'is_superuser', 'is_verified', 'groups', 'user_permissions')
         }),
-        # ('Important Dates', {
-        #     'fields': ('created_at', 'updated_at')
-        # }),
     )

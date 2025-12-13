@@ -63,6 +63,10 @@ INSTALLED_APPS = [
     
     # Third-Party Apps
     "phonenumber_field",
+    "rest_framework",
+    "rest_framework_simplejwt",
+    "drf_spectacular",
+    "mail_templated",
 ]
 
 MIDDLEWARE = [
@@ -254,3 +258,37 @@ UNFOLD = {
     },
     "SHOW_LANGUAGES": True,
 }
+
+
+
+# django rest framework Configurations
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ),
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+    'DEFAULT_RENDERER_CLASSES': [
+        'core.renderers.CustomJSONRenderer',
+    ],
+
+}
+
+# Drf-Spectacular Configurations
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'Dashboard Management',
+    'DESCRIPTION': 'This apis for FahimWeb is a dashboard management',
+    'VERSION': '1.0.2',
+    'SERVE_INCLUDE_SCHEMA': True,
+}
+
+
+# Email Configurations
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = config("EMAIL_HOST", default="smtp4dev")
+EMAIL_USE_TLS = config("EMAIL_USE_TLS", cast=bool, default=False)
+EMAIL_USE_SSL = config("EMAIL_USE_SSL", cast=bool, default=False)
+EMAIL_PORT = config("EMAIL_PORT",cast=int, default=25) 
+EMAIL_HOST_USER = config("EMAIL_HOST_USER", default="")
+EMAIL_HOST_PASSWORD = config("EMAIL_HOST_PASSWORD" , default="")
+

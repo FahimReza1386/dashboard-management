@@ -38,7 +38,7 @@ class Users(AbstractDateTimeModel, AbstractBaseUser, PermissionsMixin):
         verbose_name=_("Phone Number"),
     )
     is_active=models.BooleanField(
-        default=True,
+        default=False,
         verbose_name=_("Active Status"),
     )
     is_staff=models.BooleanField(
