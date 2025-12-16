@@ -4,7 +4,7 @@ from django.urls import reverse
 from django.shortcuts import get_object_or_404
 
 # Third-Party Imports
-from rest_framework.generics import CreateAPIView, RetrieveAPIView, GenericAPIView
+from rest_framework.generics import CreateAPIView, RetrieveAPIView, GenericAPIView, ListAPIView
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenVerifyView, TokenRefreshView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
@@ -15,9 +15,16 @@ import jwt
 from datetime import datetime, timedelta
 
 # Locale Imports
-from accounts.api.serializers import ProfileApiSerializers, RegisterApiSerializer, VerifyApiSerializer
+from accounts.api.serializers import ProfileApiSerializers, RegisterApiSerializer, VerifyApiSerializer, UsersListApiSerializer
 from accounts.models import Users
+from accounts.api.permissions import IsSuperUser
 
+
+"""
+
+    Users Management Views
+
+"""
 
 class ProfilesApiView(RetrieveAPIView):
     serializer_class=ProfileApiSerializers
@@ -25,6 +32,12 @@ class ProfilesApiView(RetrieveAPIView):
 
     def get_object(self):
         return self.request.user
+    
+
+class UsersApiView(ListAPIView):
+    serializer_class=UsersListApiSerializer
+    permission_classes=[IsAuthenticated, IsSuperUser]
+    queryset = Users.objects.all()
 
 class RegisterApiView(CreateAPIView):
     serializer_class=RegisterApiSerializer

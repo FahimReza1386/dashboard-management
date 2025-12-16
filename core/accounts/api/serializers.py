@@ -47,3 +47,13 @@ class RegisterApiSerializer(serializers.ModelSerializer):
 
 class VerifyApiSerializer(serializers.Serializer):
     token=serializers.CharField()
+    
+
+"""
+    Management Users Serializer
+"""
+
+class UsersListApiSerializer(serializers.ModelSerializer):
+    class Meta:
+        model=Users
+        fields=["email", "first_name", "last_name", "phone_number", "is_verified", "is_active", "is_superuser", "type", "created_at", "updated_at"]

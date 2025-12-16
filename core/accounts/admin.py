@@ -30,6 +30,6 @@ class UsersAdmin(ModelAdmin):
             'fields': ('first_name', 'last_name', 'national_code', 'phone_number', 'avatar')
         }),
         ('Permissions', {
-            'fields': ('is_active', 'is_staff', 'is_superuser', 'is_verified', 'groups', 'user_permissions')
+            'fields': ('is_active', 'is_staff', 'is_superuser', 'is_verified', 'groups', 'user_permissions', 'type')
         }),
     )

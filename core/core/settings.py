@@ -279,6 +279,14 @@ SPECTACULAR_SETTINGS = {
     'DESCRIPTION': 'This apis for FahimWeb is a dashboard management',
     'VERSION': '1.0.2',
     'SERVE_INCLUDE_SCHEMA': True,
+    'SECURITY': [{'Bearer': []}],
+    'SECURITY_SCHEMES': {
+        'Bearer': {
+            'type': 'http',
+            'scheme': 'bearer',
+            'bearerFormat': 'JWT',
+        },
+    },
 }
 
 

@@ -15,6 +15,8 @@ class Users(AbstractDateTimeModel, AbstractBaseUser, PermissionsMixin):
     class UserTypeModel(models.IntegerChoices):
         superuser= 1, _("SuperUser")
         customer=2, _("Customer")
+        admin=3, _("Admin")
+        
     username=None
     email=models.EmailField(
         unique=True,

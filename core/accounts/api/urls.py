@@ -8,6 +8,7 @@ app_name = "accounts-api"
 
 USER_URLS = [
     path("profiles/", views.ProfilesApiView.as_view(), name="profile"),
+    path("users/", views.UsersApiView.as_view(), name="users"),
 ]
 
 AUTHENTICATIONS_URLS = [
