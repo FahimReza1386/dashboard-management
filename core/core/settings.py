@@ -48,7 +48,8 @@ INSTALLED_APPS = [
     "unfold.contrib.import_export",
     "unfold.contrib.guardian",
     "unfold.contrib.simple_history",
-    "unfold.contrib.location_field",    
+    "unfold.contrib.location_field",  
+      
     # Django Apps
     "django.contrib.admin",
     "django.contrib.auth",
@@ -67,6 +68,7 @@ INSTALLED_APPS = [
     "rest_framework_simplejwt",
     "drf_spectacular",
     "mail_templated",
+    "django_filters",
 ]
 
 MIDDLEWARE = [
@@ -270,7 +272,10 @@ REST_FRAMEWORK = {
     'DEFAULT_RENDERER_CLASSES': [
         'core.renderers.CustomJSONRenderer',
     ],
-
+    'DEFAULT_FILTER_BACKENDS' : [
+        "django_filters.rest_framework.DjangoFilterBackend"
+    ],
+    'DEFAULT_PAGINATION_CLASS' : "accounts.api.pagination.CustomPagination"
 }
 
 # Drf-Spectacular Configurations

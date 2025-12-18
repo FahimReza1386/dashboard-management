@@ -13,12 +13,13 @@ from mail_templated import send_mail
 from jwt.exceptions import ExpiredSignatureError, InvalidTokenError
 import jwt
 from datetime import datetime, timedelta
-
+from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework.filters import SearchFilter, OrderingFilter
 # Locale Imports
 from accounts.api.serializers import ProfileApiSerializers, RegisterApiSerializer, VerifyApiSerializer, UsersListApiSerializer
 from accounts.models import Users
 from accounts.api.permissions import IsSuperUser
-
+from accounts.api.pagination import CustomPagination
 
 """
 
@@ -33,11 +34,16 @@ class ProfilesApiView(RetrieveAPIView):
     def get_object(self):
         return self.request.user
     
-
 class UsersApiView(ListAPIView):
     serializer_class=UsersListApiSerializer
     permission_classes=[IsAuthenticated, IsSuperUser]
     queryset = Users.objects.all()
+    filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
+    filterset_fields= ["email", "first_name", "last_name", "is_active", "is_verified"]
+    search_fields= ["email", "first_name", "last_name"]
+    ordering_fields= ["id", "nationa_code"]
+    pagination_class = CustomPagination
+    
 
 class RegisterApiView(CreateAPIView):
     serializer_class=RegisterApiSerializer
