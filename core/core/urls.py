@@ -20,6 +20,8 @@ urlpatterns += i18n_patterns(
     # Optional UI:
     path('api/swagger/', SpectacularSwaggerView.as_view(url_name='schema'), name='swagger-ui'),
     path('api/redoc/', SpectacularRedocView.as_view(url_name='schema'), name='redoc'),
+    
+    prefix_default_language=True
 )
 
 

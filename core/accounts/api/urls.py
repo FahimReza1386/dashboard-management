@@ -19,4 +19,4 @@ AUTHENTICATIONS_URLS = [
     path("token/verify/", views.TokenVerifyApiView.as_view(), name="token-verify")
 ]
 
-urlpatterns = AUTHENTICATIONS_URLS + USER_URLS
+urlpatterns = AUTHENTICATIONS_URLS + USER_URLS  
