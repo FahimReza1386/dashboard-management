@@ -6,13 +6,17 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('accounts', '0002_alter_users_is_active'),
+        ("accounts", "0002_alter_users_is_active"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='users',
-            name='type',
-            field=models.IntegerField(choices=[(1, 'SuperUser'), (2, 'Customer'), (3, 'Admin')], default=2, verbose_name='User Type'),
+            model_name="users",
+            name="type",
+            field=models.IntegerField(
+                choices=[(1, "SuperUser"), (2, "Customer"), (3, "Admin")],
+                default=2,
+                verbose_name="User Type",
+            ),
         ),
     ]
