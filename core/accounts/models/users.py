@@ -9,7 +9,7 @@ from phonenumber_field.modelfields import PhoneNumberField
 # Locale Imports
 from utils.models.datetime import AbstractDateTimeModel
 from accounts.managers.user_manager import UserManager
-
+from accounts.validations.validations import is_valid_iranian_national_code
 
 class Users(AbstractDateTimeModel, AbstractBaseUser, PermissionsMixin):
     class UserTypeModel(models.IntegerChoices):
@@ -33,6 +33,7 @@ class Users(AbstractDateTimeModel, AbstractBaseUser, PermissionsMixin):
     national_code = models.CharField(
         max_length=10,
         unique=True,
+        validators=[is_valid_iranian_national_code],
         verbose_name=_("National Code"),
     )
     phone_number = PhoneNumberField(
