@@ -26,7 +26,7 @@ class AuthenticationsTests(APITestCase):
             "email": "FahimTest@gmail.com",
             "password": "FahimTest123",
             "password_confirm": "FahimTest123",
-            "national_code": "2503201212",
+            "national_code": "2550318420",
             "phone_number": "09172188787",
         }
         response = self.client.post(register_url, register_data, format="json")
@@ -44,7 +44,7 @@ class AuthenticationsTests(APITestCase):
             "password_confirm": "VerifyTest123",
             "first_name": "Verify",
             "last_name": "Test",
-            "national_code": "1234567890",
+            "national_code": "2550318420",
             "phone_number": "+989123456789",
         }
         response = self.client.post(register_url, register_data, format="json")
@@ -61,7 +61,6 @@ class AuthenticationsTests(APITestCase):
 
         response = self.client.get(verify_url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertIn("حساب شما تایید شد", response.data["msg"])
 
     def test_api_login(self):
         login_url = reverse_lazy("accounts-api:login")

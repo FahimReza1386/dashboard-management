@@ -8,12 +8,12 @@ app_name = "accounts-api"
 
 USER_URLS = [
     path(
-        "profiles/",
+        "profiles",
         views.ProfilesApiView.as_view(),
         name="profile"
     ),
     path(
-        "users/",
+        "users",
         views.UsersApiView.as_view(),
         name="users"
     ),
@@ -21,27 +21,27 @@ USER_URLS = [
 
 AUTHENTICATIONS_URLS = [
     path(
-        "register/",
+        "register",
         views.RegisterApiView.as_view(),
         name="user-register"
     ),
     path(
-        "register/verify/<str:token>/",
+        "register/verify/<str:token>",
         views.RegisterVerifyView.as_view(),
         name="user-verify",
     ),
     path(
-        "token/login/",
+        "token/login",
         views.LoginApiView.as_view(),
         name="login"
     ),
     path(
-        "token/refresh/",
+        "token/refresh",
         views.TokenRefreshApiView.as_view(),
         name="token-refresh"
     ),
     path(
-        "token/verify/",
+        "token/verify",
         views.TokenVerifyApiView.as_view(),
         name="token-verify"
     ),

@@ -2,6 +2,8 @@
 from django.conf import settings
 from django.urls import reverse
 from django.shortcuts import get_object_or_404
+from django.contrib.auth import login
+from django.utils.translation import gettext as _
 
 # Third-Party Imports
 from rest_framework.generics import (
@@ -33,8 +35,7 @@ from accounts.api.serializers import (
     UsersListApiSerializer,
 )
 from accounts.models import Users
-from accounts.api.permissions import IsSuperUser
-from accounts.api.pagination import CustomPagination
+from accounts.api.accounts_pagination import AccountsPagination
 
 """
 
@@ -55,7 +56,7 @@ class ProfilesApiView(RetrieveAPIView):
 
 class UsersApiView(ListAPIView):
     serializer_class = UsersListApiSerializer
-    permission_classes = [IsAuthenticated, IsSuperUser]
+    permission_classes = [IsAuthenticated]
     queryset = Users.objects.all()
     filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
     filterset_fields = ["email", "first_name",
@@ -63,7 +64,7 @@ class UsersApiView(ListAPIView):
                         "is_verified"]
     search_fields = ["email", "first_name", "last_name"]
     ordering_fields = ["id", "nationa_code"]
-    pagination_class = CustomPagination
+    pagination_class = AccountsPagination
 
 
 class RegisterApiView(CreateAPIView):
@@ -77,9 +78,8 @@ class RegisterApiView(CreateAPIView):
 
             data = {
                 "email": email,
-                "msg": ("سلام کاربر گرامی لینک تایید حساب شما به ایمیلتان ارسال شد. "
-                        "تنها تا ۵ ساعت پس از ارسال این لینک میتوانید حساب خود را "
-                        "فعال کنید."),
+                "msg": _("Hello dear user, your account verification link has been sent to your email."
+"You can activate your account only up to 5 hours after this link is sent."),
             }
 
             user = get_object_or_404(Users, email=email)
@@ -123,22 +123,28 @@ class RegisterVerifyView(GenericAPIView):
 
                 data = {
                     "email": user.email,
-                    "msg": "کاربر گرامی خوشحالم از اینکه مجموعه مارو انتخاب کردید. "
-                           "حساب شما تایید شد.",
+                    "msg": _("Dear user, I am glad that you have chosen our collection."
+                            "Your account has been verified."),
                 }
                 return Response(data, status=status.HTTP_200_OK)
             return Response(
-                {"msg": "کاربر یافت نشد ."}, status=status.HTTP_404_NOT_FOUND
+                {"msg": "User not found."}, status=status.HTTP_404_NOT_FOUND
             )
         except ExpiredSignatureError:
-            return Response({"msg": "لینک تایید منقضی شده است."})
+            return Response({"msg": "The verification link has expired."})
         except (InvalidTokenError, Exception):
-            return Response({"msg": "لینک تایید نامعتبر است ."})
+            return Response({"msg": "The verification link is invalid."})
 
 
 class LoginApiView(TokenObtainPairView):
-    pass
-
+    def post(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        
+        user = serializer.user
+        login(request, user)
+        
+        return Response(serializer.validated_data, status=200)
 
 class TokenRefreshApiView(TokenRefreshView):
     pass

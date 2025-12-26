@@ -250,6 +250,7 @@ UNFOLD = {
 # django rest framework Configurations
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": (
+        'rest_framework.authentication.SessionAuthentication',
         "rest_framework_simplejwt.authentication.JWTAuthentication",
     ),
     "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
@@ -257,7 +258,7 @@ REST_FRAMEWORK = {
         "core.renderers.CustomJSONRenderer",
     ],
     "DEFAULT_FILTER_BACKENDS": ["django_filters.rest_framework.DjangoFilterBackend"],
-    "DEFAULT_PAGINATION_CLASS": "accounts.api.pagination.CustomPagination",
+    'EXCEPTION_HANDLER': 'core.exceptions.custom_exception_handler'
 }
 
 # Drf-Spectacular Configurations
