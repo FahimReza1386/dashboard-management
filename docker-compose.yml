@@ -1,0 +1,89 @@
+services:
+  redis:
+    container_name: redis
+    image: redis:latest
+    restart: always
+    expose:
+      - "6379"
+    command: redis-server --save 60 1 --loglevel warning
+  db:
+    container_name: postgresql
+    image: postgres:18-alpine
+    restart: always
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    
+    expose:
+      - "5432"
+
+  backend:
+    container_name: dashboard
+    build:
+      context: .
+      dockerfile: ./docker/develop/DockerFile
+    volumes:
+      - ./core:/usr/src/app/
+    
+    environment:
+      - DEBUG=True
+    ports:
+      - "8000:8000"
+    restart: always
+    command: "python manage.py runserver 0.0.0.0:8000"
+    depends_on:
+      - db
+      - redis
+  
+  celery:
+    container_name: celery_worker
+    volumes: 
+    - ./core:/usr/src/app
+    build:
+      context: .
+      dockerfile: ./docker/develop/DockerFile
+    command: celery -A core worker --loglevel=info
+    depends_on:
+      - db
+      - redis
+      - backend
+  
+  celery_beat:
+    container_name: celery_beat
+    build:
+      context: .
+      dockerfile: ./docker/develop/DockerFile
+    volumes:
+      - ./core:/usr/src/app
+    command: celery -A core beat --loglevel=info
+    depends_on:
+      - db
+      - redis
+      - backend
+      - celery
+
+  smtp4dev:
+    image: rnwood/smtp4dev:v3
+    restart: always
+    ports:
+      - '5000:80'
+      - '25:25'
+      - '143:143'
+
+    volumes:
+      - smtp4dev-data:/smtp4dev
+
+    environment:
+      - ServerOptions_HostName=smtp4dev
+
+    depends_on:
+      - db
+      - redis
+      - backend
+
+volumes:
+  postgres_data:
+  smtp4dev-data:
